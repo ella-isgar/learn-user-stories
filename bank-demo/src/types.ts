@@ -25,5 +25,11 @@ export interface BankType {
     to_deposit: number
   ): number;
 
+  withdrawMoney(
+    username: string,
+    accountNumber: number,
+    to_withdraw: number
+  ): number;
+
   checkBalance(username: string, accountNumber: number): number;
 }

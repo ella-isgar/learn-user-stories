@@ -114,6 +114,43 @@ export class Bank implements BankType {
     return target_acc.balance;
   }
 
+  /**
+   * Withdraw the requested funds from the given account of the user.
+   * @param username the username of the owner of the account
+   * @param accountNumber the account number of the target account
+   * @param to_withdraw the amount of $ to withdraw that is >= 0
+   * @returns the updated balance
+   */
+  withdrawMoney(
+    username: string,
+    accountNumber: number,
+    to_withdraw: number
+  ): number {
+    // 1. Verify username
+    if (!this.doesUsernameExist(username)) {
+      throw new Error("User not found");
+    }
+
+    // 2. Verify account (confirm account exists and given username is registered owner)
+    const target_acc = this.findAccountById(accountNumber);
+
+    if (!target_acc) {
+      throw new Error("Account not found");
+    } else if (target_acc.account_owner !== username) {
+      throw new Error("Provided user is not the owner of given account.");
+    }
+
+    // 3. Valid funds to withdraw
+    if (to_withdraw < 0 || to_withdraw > target_acc.balance) {
+      throw new Error("Invalid funds to withdraw");
+    }
+
+    // 4. Update balance
+    target_acc.balance -= to_withdraw;
+
+    return target_acc.balance;
+  }
+
   private findAccountById(id: number): AccountType | undefined {
     return this.accounts.find((account) => account.id === id);
   }
